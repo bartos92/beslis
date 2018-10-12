@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserEntry extends Model
 {
-    protected $fillable = ['duration', 'concise'];
+    protected $fillable = ['timeStart', 'timeStop', 'concise', 'answer'];
+    public $timestamps = false;
 }

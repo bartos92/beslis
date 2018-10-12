@@ -17,7 +17,10 @@ use App\UserEntry;
 Route::get('userEntries', 'UserEntryController@index');
 
 
-Route::post('userEntry', 'UserEntryController@store');
+Route::post('newUserEntry', 'UserEntryController@create');
+
+Route::post('updateReadUserEntry', 'UserEntryController@read');
+Route::post('updateAnswerUserEntry', 'UserEntryController@answer');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

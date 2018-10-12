@@ -15,9 +15,10 @@ class CreateUserEntriesTable extends Migration
     {
         Schema::create('user_entries', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('duration');
+            $table->dateTime('timeStart');
+            $table->dateTime('timeStop')->nullable();
             $table->boolean('concise');
-            $table->timestamps();
+            $table->string('answer')->nullable();
         });
     }
 
