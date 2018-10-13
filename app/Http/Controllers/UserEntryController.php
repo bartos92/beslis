@@ -14,9 +14,9 @@ class UserEntryController extends Controller
         return UserEntry::all();
     }
 
-    public function create(Request $request)
+    public function create()
     {
-        $concise = $request->get('concise');
+        $concise = !UserEntry::orderBy('id', 'desc')->first()->concise;
 
         return UserEntry::create(['concise' => $concise, 'timeStart' => new \DateTime()]);
     }
@@ -26,8 +26,12 @@ class UserEntryController extends Controller
         $id = $request->get('id');
 
         $userEntry = UserEntry::find($id);
-        $userEntry->timeStop = new \DateTime();
+        $timeStart = new \DateTime($userEntry->timeStart);
 
+        $diff = (new \DateTime())->getTimeStamp() - $timeStart->getTimeStamp() ;
+        if ($diff > 3600 || !is_null($userEntry->timeStop)) return new JsonResponse('Expired session', 500);
+
+        $userEntry->timeStop = new \DateTime();
         $userEntry->save();
 
         return new JsonResponse('Great Success');
@@ -38,8 +42,11 @@ class UserEntryController extends Controller
         $id = $request->get('id');
 
         $userEntry = UserEntry::find($id);
-        $userEntry->answer = $request->get('answer');
 
+        $diff = (new \DateTime())->getTimeStamp() - (new \DateTime($userEntry->timeStart))->getTimeStamp() ;
+        if ($diff > 3600 || !is_null($userEntry->answer)) return new JsonResponse('Expired session', 500);
+
+        $userEntry->answer = $request->get('answer');
         $userEntry->save();
 
         return new JsonResponse('Great Success');
